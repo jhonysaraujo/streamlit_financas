@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import datetime
 
 # Configuração da página para layout amplo
 st.set_page_config(page_title="Gestão de Gastos", layout="wide")
@@ -14,6 +15,17 @@ def load_data():
 
 df = load_data()
 
+# Dicionário com meses no formato desejado
+meses_formatados = {
+    1: "1. Janeiro", 2: "2. Fevereiro", 3: "3. Março",
+    4: "4. Abril", 5: "5. Maio", 6: "6. Junho",
+    7: "7. Julho", 8: "8. Agosto", 9: "9. Setembro",
+    10: "10. Outubro", 11: "11. Novembro", 12: "12. Dezembro"
+}
+
+# Mês atual no formato "3. Março", por exemplo
+mes_atual_formatado = meses_formatados[datetime.datetime.now().month]
+
 # Criar barra lateral para os filtros
 st.sidebar.header("Filtros")
 
@@ -23,7 +35,8 @@ tipo_selecionado = [tipo for tipo in tipos_disponiveis if st.sidebar.checkbox(f"
 
 # Filtro de Mês e Categoria na sidebar
 meses_disponiveis = ["Todos"] + list(df["Mês"].unique())
-mes_selecionado = st.sidebar.selectbox("Selecione o mês:", meses_disponiveis)
+indice_mes_padrao = meses_disponiveis.index(mes_atual_formatado) if mes_atual_formatado in meses_disponiveis else 0
+mes_selecionado = st.sidebar.selectbox("Selecione o mês:", meses_disponiveis, index=indice_mes_padrao)
 
 categorias_disponiveis = ["Todos"] + list(df["Categoria"].unique())
 categoria_selecionada = st.sidebar.selectbox("Selecione a categoria:", categorias_disponiveis)
